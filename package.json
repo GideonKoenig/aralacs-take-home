@@ -1,0 +1,9 @@
+{
+    "name": "scalara-application-take-home",
+    "private": true,
+    "packageManager": "yarn@4.9.4",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ]
+}

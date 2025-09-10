@@ -1,0 +1,1 @@
+# scalara-application-take-home
