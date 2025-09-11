@@ -5,11 +5,11 @@ import {
     NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { env } from 'src/env';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { env } from 'src/env';
 
-async function bootstrap() {
+async function generate() {
     const app = await NestFactory.create<NestFastifyApplication>(
         AppModule,
         new FastifyAdapter(),
@@ -25,13 +25,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     const outputPath = join(process.cwd(), 'openapi.json');
     writeFileSync(outputPath, JSON.stringify(document, null, 2));
-
-    SwaggerModule.setup('docs', app, document);
-    await app.listen(env.PORT, '0.0.0.0');
+    await app.close();
 }
-void bootstrap().then(() => {
-    console.log(`Server is running on ${env.SITE_URL}:${env.PORT}`);
-    console.log(
-        `OpenAPI documentation is available at ${env.SITE_URL}:${env.PORT}/docs`,
-    );
-});
+
+void generate();
