@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@/app.module.js';
 import {
     FastifyAdapter,
     NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { env } from 'src/env';
+import { env } from '@/env.js';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 

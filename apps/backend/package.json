@@ -3,22 +3,21 @@
     "version": "0.0.1",
     "description": "",
     "author": "",
+    "type": "module",
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "start": "nest start",
-        "start:dev": "nest start --watch",
-        "start:debug": "nest start --debug --watch",
+        "start": "tsx src/main.ts",
+        "start:dev": "tsx watch src/main.ts",
         "start:prod": "node dist/main",
-        "openapi:gen": "ts-node -T src/swagger.ts",
+        "openapi:gen": "tsx src/swagger.ts",
         "prebuild": "yarn openapi:gen",
         "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
-        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json"
     },
     "dependencies": {
@@ -54,6 +53,7 @@
         "ts-loader": "^9.5.2",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
+        "tsx": "^4.20.5",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.20.0"
     },
@@ -66,7 +66,13 @@
         "rootDir": "src",
         "testRegex": ".*\\.spec\\.ts$",
         "transform": {
-            "^.+\\.(t|j)s$": "ts-jest"
+            "^.+\\.(t|j)s$": [
+                "ts-jest",
+                {
+                    "useESM": true,
+                    "tsconfig": "tsconfig.json"
+                }
+            ]
         },
         "collectCoverageFrom": [
             "**/*.(t|j)s"

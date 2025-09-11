@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import {
     FastifyAdapter,
     NestFastifyApplication,
@@ -7,7 +6,8 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { env } from 'src/env';
+import { AppModule } from '@/app.module.js';
+import { env } from '@/env.js';
 
 async function generate() {
     const app = await NestFactory.create<NestFastifyApplication>(
