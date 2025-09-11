@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module.js';
 import {
@@ -27,7 +28,7 @@ async function bootstrap() {
     writeFileSync(outputPath, JSON.stringify(document, null, 2));
 
     SwaggerModule.setup('docs', app, document);
-    await app.listen(env.PORT, '0.0.0.0');
+    await app.listen(env.PORT, '::');
 }
 void bootstrap().then(() => {
     console.log(`Server is running on ${env.SITE_URL}:${env.PORT}`);

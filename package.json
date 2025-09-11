@@ -5,5 +5,11 @@
     "workspaces": [
         "apps/*",
         "packages/*"
-    ]
+    ],
+    "scripts": {
+        "dev": "concurrently -k -n backend,webapp -c yellow,green \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.2.1"
+    }
 }
