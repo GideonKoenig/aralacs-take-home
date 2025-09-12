@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { env } from "@/env.js";
+import { Injectable } from "@nestjs/common";
+import { getSharedNumber } from "@scalara/shared/shared-number";
 
 @Injectable()
 export class AppService {
     getHello(): string {
-        return 'Hello World from NestJs.';
+        const sharedNumber = getSharedNumber(env);
+        return `Hello World from NestJs. ${sharedNumber.toString()}`;
     }
 }

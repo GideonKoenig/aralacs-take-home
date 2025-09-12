@@ -15,6 +15,14 @@ const baseConfig = [
     {
         files: ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
         rules: {
+            "@typescript-eslint/restrict-template-expressions": [
+                "off",
+                {
+                    allowNumber: true,
+                    allowBoolean: true,
+                    allowNullish: true,
+                },
+            ],
             "@typescript-eslint/consistent-type-imports": [
                 "warn",
                 { prefer: "type-imports", fixStyle: "inline-type-imports" },

@@ -6,21 +6,7 @@ const config = [
     ...base,
     {
         languageOptions: {
-            globals: { ...globals.node, ...globals.jest },
-            sourceType: "module",
-        },
-    },
-    {
-        rules: {
-            "@typescript-eslint/no-extraneous-class": [
-                "off",
-                {
-                    allowConstructorOnly: true,
-                    allowEmpty: true,
-                    allowStaticOnly: true,
-                    allowWithDecorator: true,
-                },
-            ],
+            globals: { ...globals.node },
         },
     },
     {

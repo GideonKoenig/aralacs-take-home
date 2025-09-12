@@ -16,6 +16,7 @@
         "sourceMap": true,
         "outDir": "./dist",
         "baseUrl": "./",
+        "verbatimModuleSyntax": false,
         "paths": {
             "@/*": ["src/*"]
         },
