@@ -7,7 +7,9 @@
         "packages/*"
     ],
     "scripts": {
-        "dev": "concurrently -k -n backend,webapp -c yellow,green \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\""
+        "dev": "concurrently -k -n backend,webapp -c yellow,green \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\"",
+        "lint": "yarn workspaces foreach -pv run lint",
+        "format": "yarn workspaces foreach -pv run format"
     },
     "devDependencies": {
         "concurrently": "^9.2.1"

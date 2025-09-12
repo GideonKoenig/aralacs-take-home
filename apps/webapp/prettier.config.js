@@ -1,5 +1,6 @@
-/** @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions} */
+import rootConfig from "../../prettier.config.mjs";
+
 export default {
+    ...rootConfig,
     plugins: ["prettier-plugin-tailwindcss"],
-    tabWidth: 4,
 };

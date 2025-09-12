@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        /* Emit/JavaScript */
+        "target": "ES2022",
+        "lib": ["ES2022"],
+        "noEmit": true,
+
+        /* Modules - keep framework specifics in package tsconfigs */
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "verbatimModuleSyntax": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "isolatedModules": true,
+
+        /* Strictness */
+        "strict": true,
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "useUnknownInCatchVariables": true,
+        "forceConsistentCasingInFileNames": true,
+        "skipLibCheck": true,
+
+        /* Incremental */
+        "incremental": true,
+
+        /* Paths */
+        "baseUrl": "."
+    }
+}
