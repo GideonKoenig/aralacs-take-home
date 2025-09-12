@@ -1,3 +1,4 @@
+# yarn
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -5,6 +6,13 @@
 !.yarn/sdks
 !.yarn/versions
 
-node_modules
+# compiled output
+**/dist/
+**/build/
+**/node_modules/
 
-.env
+
+# env
+**/.env
+**.env.*
+!**/.env.example
