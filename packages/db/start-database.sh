@@ -14,6 +14,10 @@
 set -a
 source .env
 
+# Normalize potential CRLF to LF in env values
+POSTGRES_DATABASE_URL=$(echo "$POSTGRES_DATABASE_URL" | tr -d '\r')
+GREMLIN_DATABASE_URL=$(echo "$GREMLIN_DATABASE_URL" | tr -d '\r')
+
 PG_DB_PASSWORD=$(echo "$POSTGRES_DATABASE_URL" | awk -F':' '{print $3}' | awk -F'@' '{print $1}')
 PG_DB_PORT=$(echo "$POSTGRES_DATABASE_URL" | awk -F':' '{print $4}' | awk -F'/' '{print $1}')
 PG_DB_NAME=$(echo "$POSTGRES_DATABASE_URL" | awk -F'/' '{print $4}')
@@ -76,7 +80,7 @@ else
       else
         # Generate a random URL-safe password
         PG_DB_PASSWORD=$(openssl rand -base64 12 | tr '+/' '-_')
-        sed -i '' "s#:password@#:$PG_DB_PASSWORD@#" .env
+        sed -i.bak "s#:password@#:$PG_DB_PASSWORD@#" .env
       fi
     fi
 

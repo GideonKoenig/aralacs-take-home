@@ -11,7 +11,7 @@ const scriptPath = resolve(repoRoot, "start-database.sh");
  * Run a command.
  * Pass { quiet: true } to suppress child stdio.
  */
-function run(cmd, args, options = {}) {
+function run(cmd: string, args: string[], options: { quiet?: boolean } = {}) {
     return new Promise((resolvePromise, rejectPromise) => {
         const child = spawn(cmd, args, {
             stdio: options.quiet ? "ignore" : "inherit",
@@ -19,7 +19,7 @@ function run(cmd, args, options = {}) {
         });
         child.on("error", rejectPromise);
         child.on("exit", (code) => {
-            if (code === 0) resolvePromise();
+            if (code === 0) resolvePromise(void 0);
             else rejectPromise(new Error(`${cmd} exited with code ${code}`));
         });
     });
@@ -46,7 +46,7 @@ async function main() {
         }
 
         // Convert Windows absolute path like C:\\x\\y to /mnt/c/x/y
-        const wslScriptPath = `/mnt/${scriptPath[0].toLowerCase()}${scriptPath
+        const wslScriptPath = `/mnt/${scriptPath[0]?.toLowerCase()}${scriptPath
             .slice(2)
             .replace(/\\/g, "/")
             .replace(/^\/?/, "/")}`;
@@ -58,7 +58,8 @@ async function main() {
     process.exit(1);
 }
 
-main().catch((err) => {
-    console.error(err?.message ?? err);
+main().catch((err: unknown) => {
+    if (err instanceof Error) console.error(err.message);
+    else console.error(err);
     process.exit(1);
 });

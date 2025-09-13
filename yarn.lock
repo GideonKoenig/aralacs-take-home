@@ -2243,6 +2243,7 @@ __metadata:
   resolution: "@scalara/db@workspace:packages/db"
   dependencies:
     "@t3-oss/env-core": "npm:^0.13.8"
+    "@types/gremlin": "npm:^3.6.7"
     "@types/node": "npm:^24.3.1"
     eslint: "npm:^9.23.0"
     eslint-config-prettier: "npm:^10.0.1"
@@ -2253,14 +2254,16 @@ __metadata:
     prettier: "npm:^3"
     reflect-metadata: "npm:^0.2.2"
     ts-node: "npm:^10.9.2"
+    tsx: "npm:^4.20.5"
     typeorm: "npm:^0.3.26"
+    typeorm-ts-node-esm: "npm:^0.3.20"
     typescript: "npm:^5.9.2"
     typescript-eslint: "npm:^8.27.0"
     zod: "npm:^4.1.5"
   languageName: unknown
   linkType: soft
 
-"@scalara/shared@workspace:packages/shared":
+"@scalara/shared@workspace:*, @scalara/shared@workspace:packages/shared":
   version: 0.0.0-use.local
   resolution: "@scalara/shared@workspace:packages/shared"
   dependencies:
@@ -2728,6 +2731,13 @@ __metadata:
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
   checksum: 10c0/39d34d1afaa338ab9763f37ad6066e3f349444f9052b9676a7cc0252ef9485a41c6d81c9c4e0d26e9077993354edf25efc853f3224dd4b447175ef62bdcc86a5
+  languageName: node
+  linkType: hard
+
+"@types/gremlin@npm:^3.6.7":
+  version: 3.6.7
+  resolution: "@types/gremlin@npm:3.6.7"
+  checksum: 10c0/8dcb42f5cfd2882ef70073ea5efc16143b31902d99b1792463d85aed2630760fc5d4d2c338807f09d359bbc9420510dd3e81fe6ef0ed0b8bcfd72551cde69a0d
   languageName: node
   linkType: hard
 
@@ -3862,6 +3872,7 @@ __metadata:
     "@nestjs/schematics": "npm:^11.0.0"
     "@nestjs/swagger": "npm:^11.2.0"
     "@nestjs/testing": "npm:^11.0.1"
+    "@scalara/shared": "workspace:*"
     "@t3-oss/env-core": "npm:^0.13.8"
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^22.10.7"
@@ -9246,6 +9257,7 @@ __metadata:
   resolution: "scalara-application-take-home@workspace:."
   dependencies:
     concurrently: "npm:^9.2.1"
+    tsx: "npm:^4.20.5"
   languageName: unknown
   linkType: soft
 
@@ -10422,6 +10434,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typeorm-ts-node-esm@npm:^0.3.20":
+  version: 0.3.20
+  resolution: "typeorm-ts-node-esm@npm:0.3.20"
+  bin:
+    typeorm-ts-node-esm: wrapper.sh
+  checksum: 10c0/cd8a778f341cb3fd00fe9de4e36a75f1c0da4aedb9b90b704cb399e6bcd42fab73fb13b3c5eb87a227c3f919a6ab798dc8a733700c668eb98aad9bfb91eb063b
+  languageName: node
+  linkType: hard
+
 "typeorm@npm:^0.3.26":
   version: 0.3.26
   resolution: "typeorm@npm:0.3.26"
@@ -10803,6 +10824,7 @@ __metadata:
   resolution: "webapp@workspace:apps/webapp"
   dependencies:
     "@eslint/eslintrc": "npm:^3.3.1"
+    "@scalara/shared": "workspace:*"
     "@t3-oss/env-nextjs": "npm:^0.12.0"
     "@tailwindcss/postcss": "npm:^4.0.15"
     "@tanstack/react-query": "npm:^5.69.0"

@@ -6,7 +6,10 @@
     "scripts": {
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
         "lint": "eslint \"**/*.{ts,tsx,js,jsx}\" --fix",
-        "db:start": "node ./scripts/start-database.mjs"
+        "start": "tsx ./scripts/start-database.ts",
+        "typeorm": "typeorm-ts-node-esm",
+        "generate": "yarn typeorm migration:generate -d ./src/postgres.ts ./src/postgres-migrations/Migration",
+        "push": "yarn typeorm migration:run -d ./src/postgres.ts"
     },
     "dependencies": {
         "@t3-oss/env-core": "^0.13.8",
@@ -18,12 +21,15 @@
         "zod": "^4.1.5"
     },
     "devDependencies": {
+        "@types/gremlin": "^3.6.7",
         "@types/node": "^24.3.1",
         "eslint": "^9.23.0",
         "eslint-config-prettier": "^10.0.1",
         "globals": "^16",
         "prettier": "^3",
         "ts-node": "^10.9.2",
+        "tsx": "^4.20.5",
+        "typeorm-ts-node-esm": "^0.3.20",
         "typescript": "^5.9.2",
         "typescript-eslint": "^8.27.0"
     }
