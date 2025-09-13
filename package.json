@@ -10,7 +10,8 @@
         "predev": "yarn workspace @scalara/shared run build",
         "dev": "concurrently -k -n shared,backend,webapp -c magenta,yellow,green \"yarn workspace @scalara/shared run dev\" \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\"",
         "lint": "yarn workspaces foreach -pv run lint",
-        "format": "yarn workspaces foreach -pv run format"
+        "format": "yarn workspaces foreach -pv run format",
+        "db:start": "yarn workspace @scalara/db run db:start"
     },
     "devDependencies": {
         "concurrently": "^9.2.1"
