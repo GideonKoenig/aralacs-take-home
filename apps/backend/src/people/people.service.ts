@@ -1,4 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {
+    Inject,
+    Injectable,
+    UnprocessableEntityException,
+} from "@nestjs/common";
 import { GremlinService } from "@/db/gremlin.service.js";
 import {
     FriendshipConnection,
@@ -37,7 +41,11 @@ export class PeopleService {
             .toList();
         const result = parseElementMaps(traverserList, PersonEntity);
         if (!result.success) {
-            throw new Error(result.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse people list",
+                details: result.error,
+            });
         }
         return result.data;
     }
@@ -64,7 +72,11 @@ export class PeopleService {
 
         const parsed = parseElementMapValue(result, PersonEntity);
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse person",
+                details: parsed.error,
+            });
         }
         return parsed.data;
     }
@@ -91,7 +103,11 @@ export class PeopleService {
             .toList();
         const parsed = parseElementMaps(result, PersonEntity);
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse friends list",
+                details: parsed.error,
+            });
         }
         return parsed.data;
     }

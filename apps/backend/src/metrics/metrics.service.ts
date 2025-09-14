@@ -1,4 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {
+    Inject,
+    Injectable,
+    UnprocessableEntityException,
+} from "@nestjs/common";
 import { GremlinService } from "@/db/gremlin.service.js";
 import {
     BankAccountOwnerConnection,
@@ -30,7 +34,12 @@ export class MetricsService {
             storedRaw,
             z.number().int().min(0).nullable(),
         );
-        if (!storedParsed.success) throw new Error(storedParsed.error);
+        if (!storedParsed.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse stored net worth",
+                details: storedParsed.error,
+            });
         const stored = storedParsed.data;
         if (typeof stored === "number") {
             return { personId, netWorthCents: stored } as const;
@@ -48,7 +57,12 @@ export class MetricsService {
             computedRaw,
             z.number().int().min(0).nullable(),
         );
-        if (!computedParsed.success) throw new Error(computedParsed.error);
+        if (!computedParsed.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to compute net worth",
+                details: computedParsed.error,
+            });
         return {
             personId,
             netWorthCents: computedParsed.data ?? 0,
@@ -67,7 +81,12 @@ export class MetricsService {
             storedRaw,
             z.number().int().min(0).nullable(),
         );
-        if (!storedParsed.success) throw new Error(storedParsed.error);
+        if (!storedParsed.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse stored borrowable",
+                details: storedParsed.error,
+            });
         const stored = storedParsed.data;
         if (typeof stored === "number") {
             return { personId, borrowableCents: stored } as const;
@@ -85,7 +104,12 @@ export class MetricsService {
             myBalanceRaw,
             z.number().int().min(0).nullable(),
         );
-        if (!parsedMyBalance.success) throw new Error(parsedMyBalance.error);
+        if (!parsedMyBalance.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to compute balance",
+                details: parsedMyBalance.error,
+            });
         const myBalance = parsedMyBalance.data ?? 0;
 
         const friendMaxRaw = await g
@@ -106,7 +130,12 @@ export class MetricsService {
             friendMaxRaw,
             z.number().int().min(0).nullable(),
         );
-        if (!parsedFriendMax.success) throw new Error(parsedFriendMax.error);
+        if (!parsedFriendMax.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to compute friend max",
+                details: parsedFriendMax.error,
+            });
         const friendMax = parsedFriendMax.data ?? 0;
         const borrowable = calculateBorrowAmount(myBalance, friendMax);
         return { personId, borrowableCents: borrowable } as const;

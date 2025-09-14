@@ -15,6 +15,7 @@ import {
 } from "@nestjs/swagger";
 import { AccountsService } from "@/accounts/accounts.service.js";
 import { BankAccountDto } from "@scalara/db";
+import { IbanParamDto } from "@/accounts/accounts.dtos.js";
 
 @ApiTags("accounts")
 @Controller("accounts")
@@ -41,7 +42,8 @@ export class AccountsController {
     @ApiParam({ name: "iban", type: String })
     @ApiOkResponse({ type: BankAccountDto })
     @ApiNotFoundResponse({ description: "Bank account not found" })
-    async get(@Param("iban") iban: string) {
+    async get(@Param() params: IbanParamDto) {
+        const { iban } = params;
         const res = await this.accounts.getByIban(iban);
         if (!res) throw new NotFoundException("Bank account not found");
         return res;

@@ -10,6 +10,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { env } from "@/env.js";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { HttpExceptionFilter } from "@/lib/http-exception.filter.js";
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -25,6 +26,8 @@ async function bootstrap() {
             transformOptions: { enableImplicitConversion: true },
         }),
     );
+
+    app.useGlobalFilters(new HttpExceptionFilter());
 
     const config = new DocumentBuilder()
         .setTitle("API")

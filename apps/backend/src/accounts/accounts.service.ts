@@ -1,4 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {
+    Inject,
+    Injectable,
+    UnprocessableEntityException,
+} from "@nestjs/common";
 import { GremlinService } from "@/db/gremlin.service.js";
 import gremlin from "gremlin";
 import {
@@ -32,7 +36,11 @@ export class AccountsService {
             .toList();
         const parsed = parseElementMaps(result, BankAccountEntity);
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse bank accounts",
+                details: parsed.error,
+            });
         }
         return parsed.data;
     }
@@ -49,7 +57,11 @@ export class AccountsService {
             .toList();
         const parsed = parseElementMaps(result, BankAccountEntity);
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse bank accounts",
+                details: parsed.error,
+            });
         }
         return parsed.data;
     }
@@ -67,7 +79,11 @@ export class AccountsService {
             .next();
         const parsed = parseElementMapValue(result, BankAccountEntity);
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse bank account",
+                details: parsed.error,
+            });
         }
         return parsed.data;
     }

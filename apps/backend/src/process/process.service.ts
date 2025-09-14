@@ -1,4 +1,8 @@
-import { Injectable, Inject } from "@nestjs/common";
+import {
+    Injectable,
+    Inject,
+    UnprocessableEntityException,
+} from "@nestjs/common";
 import { GremlinService } from "@/db/gremlin.service.js";
 import {
     BankAccountLabel,
@@ -125,7 +129,11 @@ export class ProcessService {
             }),
         );
         if (!parsed.success) {
-            throw new Error(parsed.error);
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse net worth projection",
+                details: parsed.error,
+            });
         }
         const persons = parsed.data;
 
@@ -180,7 +188,12 @@ export class ProcessService {
                 friendMaxCents: z.number(),
             }),
         );
-        if (!parsed.success) throw new Error(parsed.error);
+        if (!parsed.success)
+            throw new UnprocessableEntityException({
+                error: "ValidationError",
+                message: "Failed to parse borrowable projection",
+                details: parsed.error,
+            });
         const persons = parsed.data;
 
         for (const row of persons) {
