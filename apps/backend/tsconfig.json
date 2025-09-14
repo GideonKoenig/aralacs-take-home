@@ -18,7 +18,8 @@
         "baseUrl": "./",
         "verbatimModuleSyntax": false,
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["src/*"],
+            "@test/*": ["src/test/*"]
         },
         "incremental": true,
         "skipLibCheck": true,
