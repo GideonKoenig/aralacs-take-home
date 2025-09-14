@@ -7,7 +7,7 @@ import {
     Post,
 } from "@nestjs/common";
 import { ProcessService } from "@/process/process.service.js";
-import { BodyDto } from "@/process/process.dto.js";
+import { TriggerProcessRequest } from "@/process/process.dto.js";
 import { ApiBody } from "@nestjs/swagger";
 
 @Controller("process")
@@ -17,9 +17,9 @@ export class ProcessController {
     ) {}
 
     @Post()
-    @ApiBody({ type: BodyDto })
+    @ApiBody({ type: TriggerProcessRequest })
     @HttpCode(HttpStatus.ACCEPTED)
-    async trigger(@Body() body: BodyDto) {
+    async trigger(@Body() body: TriggerProcessRequest) {
         await this.service.run(body.processId);
         return { ok: true } as const;
     }
