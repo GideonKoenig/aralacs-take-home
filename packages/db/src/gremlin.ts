@@ -34,11 +34,3 @@ export async function initializeGremlin(env: EnvDb) {
         close: async () => connection.close(),
     };
 }
-
-export async function testGremlin(env: EnvDb) {
-    const gremlin = await initializeGremlin(env);
-    const g = gremlin.g;
-    const tmp = await g.V().hasLabel("person").values("name").toList();
-    await gremlin.close();
-    return tmp.length;
-}

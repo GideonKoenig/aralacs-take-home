@@ -14,6 +14,242 @@
           "App"
         ]
       }
+    },
+    "/webhook/process": {
+      "post": {
+        "operationId": "ProcessController_trigger",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Process"
+        ]
+      }
+    },
+    "/people": {
+      "get": {
+        "operationId": "PeopleController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/people/{id}": {
+      "get": {
+        "operationId": "PeopleController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/people/{id}/friends": {
+      "get": {
+        "operationId": "PeopleController_friends",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "people"
+        ]
+      }
+    },
+    "/accounts/person/{id}": {
+      "get": {
+        "operationId": "AccountsController_listByPerson",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "accounts"
+        ]
+      }
+    },
+    "/accounts/{iban}": {
+      "get": {
+        "operationId": "AccountsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "accounts"
+        ]
+      }
+    },
+    "/metrics/people/{id}/net-worth": {
+      "get": {
+        "operationId": "MetricsController_netWorth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetWorthDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "metrics"
+        ]
+      }
+    },
+    "/metrics/people/{id}/borrowable": {
+      "get": {
+        "operationId": "MetricsController_borrowable",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BorrowableDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "metrics"
+        ]
+      }
+    },
+    "/transactions": {
+      "get": {
+        "operationId": "TransactionsController_list",
+        "parameters": [
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "description": "ISO date",
+            "schema": {}
+          },
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "description": "ISO date",
+            "schema": {}
+          },
+          {
+            "name": "iban",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/transactions/{id}": {
+      "get": {
+        "operationId": "TransactionsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
     }
   },
   "info": {
@@ -29,6 +265,27 @@
     }
   ],
   "components": {
-    "schemas": {}
+    "schemas": {
+      "PersonDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AccountDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "NetWorthDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "BorrowableDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "TransactionDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
   }
 }

@@ -1,16 +1,21 @@
-import type { EnvDb } from "@scalara/db";
 import {
-    initializeGremlin,
-    initializePostgres,
+    type initializeGremlin,
+    type initializePostgres,
     TransactionEntity,
 } from "@scalara/db";
 import { Failure, Success, tryCatch } from "@scalara/db/try-catch";
 
-export async function generateDailyTransactions(env: EnvDb, count: number) {
+type GremlinConnection = Awaited<ReturnType<typeof initializeGremlin>>;
+type PostgresConnection = Awaited<ReturnType<typeof initializePostgres>>;
+
+export async function generateDailyTransactions(
+    gremlin: GremlinConnection,
+    postgres: PostgresConnection,
+    count: number,
+) {
     if (!Number.isFinite(count) || count <= 0)
         return new Failure("Count must be a positive integer");
 
-    const gremlin = await initializeGremlin(env);
     const g = gremlin.g;
 
     const ibans = (await g
@@ -19,15 +24,14 @@ export async function generateDailyTransactions(env: EnvDb, count: number) {
         .values("iban")
         .toList()) as string[];
 
-    await gremlin.close();
-
     if (ibans.length < 2) {
         return new Failure(
             "Need at least two bank accounts to generate transactions",
         );
     }
 
-    const transactions: Omit<TransactionEntity, "id" | "loadedAt">[] = [];
+    const transactions: Omit<TransactionEntity, "id">[] = [];
+    const loadedAt = new Date();
     for (let i = 0; i < count; i++) {
         const a = choice(ibans);
         let b = choice(ibans);
@@ -40,11 +44,11 @@ export async function generateDailyTransactions(env: EnvDb, count: number) {
             counterpartyIban: b,
             amount,
             direction,
+            loadedAt,
         });
     }
 
-    const dataSource = await initializePostgres(env);
-    const repo = dataSource.getRepository(TransactionEntity);
+    const repo = postgres.getRepository(TransactionEntity);
     await repo
         .createQueryBuilder()
         .insert()
@@ -52,17 +56,12 @@ export async function generateDailyTransactions(env: EnvDb, count: number) {
         .values(transactions)
         .execute();
 
-    await dataSource.destroy();
     return new Success({ inserted: transactions.length });
 }
 
-export async function clearAllTransactions(env: EnvDb) {
-    const dataSource = await initializePostgres(env);
-    const repo = dataSource.getRepository(TransactionEntity);
-
+export async function clearAllTransactions(postgres: PostgresConnection) {
+    const repo = postgres.getRepository(TransactionEntity);
     const result = await tryCatch(repo.clear());
-
-    await dataSource.destroy();
     return result;
 }
 

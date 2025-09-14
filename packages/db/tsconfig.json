@@ -11,10 +11,7 @@
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"]
-        }
+        "baseUrl": "."
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]

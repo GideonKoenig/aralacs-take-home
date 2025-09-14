@@ -19,8 +19,4 @@ export class GremlinService implements OnModuleInit, OnModuleDestroy {
     get traversal() {
         return this.connection.g;
     }
-
-    async getAllPersons() {
-        return this.connection.g.V().hasLabel("person").values("name").toList();
-    }
 }

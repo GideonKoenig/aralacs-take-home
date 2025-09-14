@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { TransactionEntity } from "./postgres-entities/transaction.js";
 import { envDb, type EnvDb } from "./env.js";
+import { entities } from "./postgres-entities/entities.js";
 
-const entities = [TransactionEntity];
+export type PostgresConnection = Awaited<ReturnType<typeof initializePostgres>>;
 
 export async function initializePostgres(env: EnvDb) {
     const dataSource = new DataSource({

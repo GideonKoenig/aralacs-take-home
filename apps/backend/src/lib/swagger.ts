@@ -6,7 +6,7 @@ import {
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { AppModule } from "@/app.module.js";
+import { AppModule } from "@/app/app.module.js";
 import { env } from "@/env.js";
 
 async function generate() {

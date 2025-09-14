@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { GremlinService } from "@/gremlin.service.js";
+import { GremlinService } from "@/db/gremlin.service.js";
 
 @Module({
     providers: [GremlinService],

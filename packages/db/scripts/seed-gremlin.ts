@@ -1,6 +1,13 @@
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { initializeGremlin } from "../src/gremlin.js";
+import type { PersonType, BankAccountType } from "../src/gremlin-entities.js";
+import {
+    PersonLabel,
+    BankAccountLabel,
+    FriendshipConnection,
+    BankAccountOwnerConnection,
+} from "../src/gremlin-entities.js";
 import gremlin from "gremlin";
 import { envDb } from "../src/env.js";
 const { process: gprocess } = gremlin;
@@ -55,18 +62,15 @@ async function main() {
     }
 
     const peopleCount = randomInt(args.peopleMin, args.peopleMax);
-    const people: {
-        id: number;
-        name: string;
-        email: string;
-    }[] = [];
+    const people: PersonType[] = [];
+    const accounts: BankAccountType[] = [];
 
     for (let i = 0; i < peopleCount; i++) {
         const id = generateNumericId(i);
         const name = generateName();
         const email = generateEmail(name);
         await g
-            .addV("person")
+            .addV(PersonLabel)
             .property(gprocess.t.id, id)
             .property("name", name)
             .property("email", email)
@@ -81,7 +85,7 @@ async function main() {
             const iban = generateIban();
             const balanceCents = generateBalanceCents();
             const created = await g
-                .addV("bankaccount")
+                .addV(BankAccountLabel)
                 .property("personId", person.id)
                 .property("iban", iban)
                 .property("balanceCents", balanceCents)
@@ -89,9 +93,15 @@ async function main() {
             const accountVertexId = (created.value as { id: number }).id;
             await g
                 .V(person.id)
-                .addE("has_bankaccount")
+                .addE(BankAccountOwnerConnection)
                 .to(__.V(accountVertexId))
                 .next();
+            accounts.push({
+                vertexId: accountVertexId,
+                iban,
+                balanceCents,
+                personId: person.id,
+            });
             totalAccounts++;
         }
     }
@@ -118,8 +128,8 @@ async function main() {
     );
     const selection = pairs.slice(0, targetPairs);
     for (const [aId, bId] of selection) {
-        await g.V(aId).addE("has_friend").to(__.V(bId)).next();
-        await g.V(bId).addE("has_friend").to(__.V(aId)).next();
+        await g.V(aId).addE(FriendshipConnection).to(__.V(bId)).next();
+        await g.V(bId).addE(FriendshipConnection).to(__.V(aId)).next();
         totalFriendships += 1;
     }
 

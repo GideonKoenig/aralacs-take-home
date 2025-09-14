@@ -9,16 +9,19 @@ const globalForDb = globalThis as unknown as {
     __gremlin: GremlinConnection | undefined;
 };
 
-export async function getPostgres() {
+async function getPostgres() {
     if (globalForDb.__pg?.isInitialized) return globalForDb.__pg;
     const ds = await initializePostgres(env);
     if (env.NODE_ENV !== "production") globalForDb.__pg = ds;
     return ds;
 }
 
-export async function getGremlin() {
+async function getGremlin() {
     if (globalForDb.__gremlin) return globalForDb.__gremlin;
     const conn = await initializeGremlin(env);
     if (env.NODE_ENV !== "production") globalForDb.__gremlin = conn;
     return conn;
 }
+
+export const pg = await getPostgres();
+export const gm = await getGremlin();
