@@ -1,5 +1,18 @@
-import { Controller, Get, Inject, Param, ParseIntPipe } from "@nestjs/common";
-import { ApiOkResponse, ApiParam, ApiTags } from "@nestjs/swagger";
+import {
+    Controller,
+    Get,
+    Inject,
+    Param,
+    ParseIntPipe,
+    NotFoundException,
+} from "@nestjs/common";
+import {
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+    ApiBadRequestResponse,
+} from "@nestjs/swagger";
 import { AccountsService } from "@/accounts/accounts.service.js";
 import { BankAccountDto } from "@scalara/db";
 
@@ -19,15 +32,18 @@ export class AccountsController {
     @Get("person/:id")
     @ApiParam({ name: "id", type: Number })
     @ApiOkResponse({ type: [BankAccountDto] })
+    @ApiBadRequestResponse({ description: "Invalid id" })
     async listByPerson(@Param("id", ParseIntPipe) id: number) {
         return this.accounts.listByPerson(id);
     }
 
-    @Get(":iban")
+    @Get("iban/:iban")
     @ApiParam({ name: "iban", type: String })
     @ApiOkResponse({ type: BankAccountDto })
+    @ApiNotFoundResponse({ description: "Bank account not found" })
     async get(@Param("iban") iban: string) {
         const res = await this.accounts.getByIban(iban);
+        if (!res) throw new NotFoundException("Bank account not found");
         return res;
     }
 }

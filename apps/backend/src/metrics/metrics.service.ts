@@ -31,7 +31,7 @@ export class MetricsService {
             z.number().int().min(0).nullable(),
         );
         if (!storedParsed.success) throw new Error(storedParsed.error);
-        const stored = storedParsed.unwrap();
+        const stored = storedParsed.data;
         if (typeof stored === "number") {
             return { personId, netWorthCents: stored } as const;
         }
@@ -51,7 +51,7 @@ export class MetricsService {
         if (!computedParsed.success) throw new Error(computedParsed.error);
         return {
             personId,
-            netWorthCents: computedParsed.unwrap() ?? 0,
+            netWorthCents: computedParsed.data ?? 0,
         } as const;
     }
 
@@ -68,7 +68,7 @@ export class MetricsService {
             z.number().int().min(0).nullable(),
         );
         if (!storedParsed.success) throw new Error(storedParsed.error);
-        const stored = storedParsed.unwrap();
+        const stored = storedParsed.data;
         if (typeof stored === "number") {
             return { personId, borrowableCents: stored } as const;
         }
@@ -86,7 +86,7 @@ export class MetricsService {
             z.number().int().min(0).nullable(),
         );
         if (!parsedMyBalance.success) throw new Error(parsedMyBalance.error);
-        const myBalance = parsedMyBalance.unwrap() ?? 0;
+        const myBalance = parsedMyBalance.data ?? 0;
 
         const friendMaxRaw = await g
             .V()
@@ -107,7 +107,7 @@ export class MetricsService {
             z.number().int().min(0).nullable(),
         );
         if (!parsedFriendMax.success) throw new Error(parsedFriendMax.error);
-        const friendMax = parsedFriendMax.unwrap() ?? 0;
+        const friendMax = parsedFriendMax.data ?? 0;
         const borrowable = calculateBorrowAmount(myBalance, friendMax);
         return { personId, borrowableCents: borrowable } as const;
     }

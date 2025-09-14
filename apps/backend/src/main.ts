@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from "@/app/app.module.js";
 import {
     FastifyAdapter,
@@ -16,6 +17,15 @@ async function bootstrap() {
         new FastifyAdapter(),
     );
 
+    app.useGlobalPipes(
+        new ValidationPipe({
+            whitelist: true,
+            forbidNonWhitelisted: true,
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    );
+
     const config = new DocumentBuilder()
         .setTitle("API")
         .setDescription("API documentation")
@@ -25,9 +35,13 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
     const outputPath = join(process.cwd(), "openapi.json");
-    writeFileSync(outputPath, JSON.stringify(document, null, 2));
+    if (env.NODE_ENV === "development") {
+        writeFileSync(outputPath, JSON.stringify(document, null, 2));
+    }
 
     SwaggerModule.setup("docs", app, document);
+    app.enableShutdownHooks();
+    app.enableCors({ origin: true, credentials: true });
     await app.listen(env.PORT, "::");
 }
 void bootstrap().then(() => {

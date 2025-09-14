@@ -39,7 +39,7 @@ export class PeopleService {
         if (!result.success) {
             throw new Error(result.error);
         }
-        return result.unwrap();
+        return result.data;
     }
 
     async getPerson(id: number): Promise<PersonType | null> {
@@ -61,12 +61,12 @@ export class PeopleService {
             .by(__.coalesce(__.values("maxBorrowableCents"), __.constant(null)))
             .by(__.coalesce(__.values("netWorthCents"), __.constant(null)))
             .next();
-        console.log("result", result);
+
         const parsed = parseElementMapValue(result, PersonEntity);
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        return parsed.unwrap();
+        return parsed.data;
     }
 
     async listFriends(id: number): Promise<PersonType[]> {
@@ -93,6 +93,6 @@ export class PeopleService {
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        return parsed.unwrap();
+        return parsed.data;
     }
 }

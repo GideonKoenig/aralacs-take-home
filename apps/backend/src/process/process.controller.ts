@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     HttpCode,
@@ -8,7 +7,7 @@ import {
     Post,
 } from "@nestjs/common";
 import { ProcessService } from "@/process/process.service.js";
-import { BodyDto, BodySchema } from "@/process/process.dto.js";
+import { BodyDto } from "@/process/process.dto.js";
 import { ApiBody } from "@nestjs/swagger";
 
 @Controller("process")
@@ -18,19 +17,10 @@ export class ProcessController {
     ) {}
 
     @Post()
-    @ApiBody({
-        schema: {
-            type: "object",
-            properties: { processId: { enum: ["1", "2", "3"] } },
-        },
-    })
+    @ApiBody({ type: BodyDto })
     @HttpCode(HttpStatus.ACCEPTED)
     async trigger(@Body() body: BodyDto) {
-        const id = BodySchema.safeParse(body);
-        if (!id.success) {
-            throw new BadRequestException("Invalid process ID");
-        }
-        await this.service.run(id.data.processId);
+        await this.service.run(body.processId);
         return { ok: true } as const;
     }
 }

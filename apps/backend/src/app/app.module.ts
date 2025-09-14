@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "@/app/app.controller.js";
-import { AppService } from "@/app/app.service.js";
 import { GremlinModule } from "@/db/gremlin.module.js";
 import { ProcessModule } from "@/process/process.module.js";
 import { PostgresModule } from "@/db/postgres.module.js";
@@ -19,7 +17,7 @@ import { TransactionsModule } from "@/transactions/transactions.module.js";
         MetricsModule,
         TransactionsModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [],
+    providers: [],
 })
 export class AppModule {}

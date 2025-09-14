@@ -1,5 +1,19 @@
-import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
-import { ApiOkResponse, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import {
+    Controller,
+    Get,
+    Inject,
+    Param,
+    Query,
+    NotFoundException,
+} from "@nestjs/common";
+import {
+    ApiOkResponse,
+    ApiParam,
+    ApiQuery,
+    ApiTags,
+    ApiNotFoundResponse,
+    ApiBadRequestResponse,
+} from "@nestjs/swagger";
 import { TransactionsService } from "@/transactions/transactions.service.js";
 import { TransactionDto } from "@/transactions/transactions.dto.js";
 
@@ -16,6 +30,7 @@ export class TransactionsController {
     @ApiQuery({ name: "from", required: false, description: "ISO date" })
     @ApiQuery({ name: "to", required: false, description: "ISO date" })
     @ApiOkResponse({ type: [TransactionDto] })
+    @ApiBadRequestResponse({ description: "Invalid query params" })
     async list(
         @Query("iban") iban?: string,
         @Query("from") from?: string,
@@ -33,7 +48,11 @@ export class TransactionsController {
         description: "Transaction ID (uuid)",
     })
     @ApiOkResponse({ type: TransactionDto })
-    async get(@Param("id") id: string): Promise<TransactionDto | null> {
-        return this.transactions.get(id);
+    @ApiNotFoundResponse({ description: "Transaction not found" })
+    @ApiBadRequestResponse({ description: "Invalid id" })
+    async get(@Param("id") id: string): Promise<TransactionDto> {
+        const tx = await this.transactions.get(id);
+        if (!tx) throw new NotFoundException("Transaction not found");
+        return tx;
     }
 }

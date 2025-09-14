@@ -28,9 +28,10 @@ export class ProcessService {
 
     async run(processId: "1" | "2" | "3") {
         const pg = this.postgres.get();
-        if (processId >= "1") await this.aggregateTransactions(pg);
-        if (processId >= "2") await this.computeNetWorth();
-        if (processId >= "3") await this.computeBorrowable();
+        const step = Number(processId);
+        if (step >= 1) await this.aggregateTransactions(pg);
+        if (step >= 2) await this.computeNetWorth();
+        if (step >= 3) await this.computeBorrowable();
     }
 
     private async aggregateTransactions(pg: PostgresConnection) {
@@ -126,7 +127,7 @@ export class ProcessService {
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        const persons = parsed.unwrap();
+        const persons = parsed.data;
 
         for (const row of persons) {
             const personId = row.id;
@@ -180,7 +181,7 @@ export class ProcessService {
             }),
         );
         if (!parsed.success) throw new Error(parsed.error);
-        const persons = parsed.unwrap();
+        const persons = parsed.data;
 
         for (const row of persons) {
             const myBalance = row.myBalanceCents;

@@ -23,14 +23,7 @@ export class TransactionsService {
         if (params.to) qb.andWhere("t.loadedAt <= :to", { to: params.to });
         qb.orderBy("t.loadedAt", "ASC");
         const rows = await qb.getMany();
-        return rows.map((r) => ({
-            id: r.id,
-            accountIban: r.accountIban,
-            counterpartyIban: r.counterpartyIban,
-            amount: r.amount,
-            direction: r.direction,
-            loadedAt: r.loadedAt,
-        }));
+        return rows;
     }
 
     async get(id: string): Promise<TransactionDto | null> {
@@ -38,14 +31,6 @@ export class TransactionsService {
         const row = await pg
             .getRepository(TransactionEntity)
             .findOne({ where: { id } });
-        if (!row) return null;
-        return {
-            id: row.id,
-            accountIban: row.accountIban,
-            counterpartyIban: row.counterpartyIban,
-            amount: row.amount,
-            direction: row.direction,
-            loadedAt: row.loadedAt,
-        };
+        return row;
     }
 }

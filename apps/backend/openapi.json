@@ -1,20 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
-      "get": {
-        "operationId": "AppController_getHello",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "App"
-        ]
-      }
-    },
     "/process": {
       "post": {
         "operationId": "ProcessController_trigger",
@@ -24,16 +10,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "processId": {
-                    "enum": [
-                      "1",
-                      "2",
-                      "3"
-                    ]
-                  }
-                }
+                "$ref": "#/components/schemas/BodyDto"
               }
             }
           }
@@ -95,6 +72,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid id"
+          },
+          "404": {
+            "description": "Person not found"
           }
         },
         "tags": [
@@ -128,6 +111,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid id"
           }
         },
         "tags": [
@@ -185,6 +171,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid id"
           }
         },
         "tags": [
@@ -192,7 +181,7 @@
         ]
       }
     },
-    "/accounts/{iban}": {
+    "/accounts/iban/{iban}": {
       "get": {
         "operationId": "AccountsController_get",
         "parameters": [
@@ -215,6 +204,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Bank account not found"
           }
         },
         "tags": [
@@ -320,6 +312,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid query params"
           }
         },
         "tags": [
@@ -351,6 +346,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid id"
+          },
+          "404": {
+            "description": "Transaction not found"
           }
         },
         "tags": [
@@ -373,6 +374,22 @@
   ],
   "components": {
     "schemas": {
+      "BodyDto": {
+        "type": "object",
+        "properties": {
+          "processId": {
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        },
+        "required": [
+          "processId"
+        ]
+      },
       "Person": {
         "type": "object",
         "properties": {

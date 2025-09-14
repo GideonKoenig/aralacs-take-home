@@ -34,7 +34,7 @@ export class AccountsService {
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        return parsed.unwrap();
+        return parsed.data;
     }
 
     async listAll() {
@@ -51,7 +51,7 @@ export class AccountsService {
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        return parsed.unwrap();
+        return parsed.data;
     }
 
     async getByIban(iban: string) {
@@ -69,6 +69,6 @@ export class AccountsService {
         if (!parsed.success) {
             throw new Error(parsed.error);
         }
-        return parsed.unwrap();
+        return parsed.data;
     }
 }
