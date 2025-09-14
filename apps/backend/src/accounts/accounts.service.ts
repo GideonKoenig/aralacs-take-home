@@ -2,11 +2,12 @@ import { Inject, Injectable } from "@nestjs/common";
 import { GremlinService } from "@/db/gremlin.service.js";
 import gremlin from "gremlin";
 import {
+    BankAccountEntity,
     BankAccountLabel,
     BankAccountOwnerConnection,
-    BankAccountType,
     PersonLabel,
 } from "@scalara/db";
+import { parseElementMaps, parseElementMapValue } from "@/lib/utils.js";
 
 const { process: gprocess } = gremlin;
 const { statics: __ } = gprocess;
@@ -19,27 +20,55 @@ export class AccountsService {
 
     async listByPerson(personId: number) {
         const g = this.gremlin.traversal;
-        return (await g
-            .V(personId)
+        const result = await g
+            .V()
             .hasLabel(PersonLabel)
+            .has("id", personId)
             .out(BankAccountOwnerConnection)
-            .project("iban", "balanceCents")
+            .project("iban", "balanceCents", "personId")
             .by("iban")
             .by("balanceCents")
-            .toList()) as BankAccountType[];
+            .by(__.constant(personId))
+            .toList();
+        const parsed = parseElementMaps(result, BankAccountEntity);
+        if (!parsed.success) {
+            throw new Error(parsed.error);
+        }
+        return parsed.unwrap();
+    }
+
+    async listAll() {
+        const g = this.gremlin.traversal;
+        const result = await g
+            .V()
+            .hasLabel(BankAccountLabel)
+            .project("iban", "balanceCents", "personId")
+            .by("iban")
+            .by("balanceCents")
+            .by(__.in_(BankAccountOwnerConnection).values("id").limit(1))
+            .toList();
+        const parsed = parseElementMaps(result, BankAccountEntity);
+        if (!parsed.success) {
+            throw new Error(parsed.error);
+        }
+        return parsed.unwrap();
     }
 
     async getByIban(iban: string) {
         const g = this.gremlin.traversal;
-        return (await g
+        const result = await g
             .V()
-            .hasLabel(BankAccountLabel)
-            .has("iban", iban)
-            .project("vertexId", "iban", "balanceCents", "personId")
-            .by("vertexId")
+            .has(BankAccountLabel, "iban", iban)
+            .limit(1)
+            .project("iban", "balanceCents", "personId")
             .by("iban")
             .by("balanceCents")
             .by(__.in_(BankAccountOwnerConnection).values("id").limit(1))
-            .next()) as { value?: BankAccountType };
+            .next();
+        const parsed = parseElementMapValue(result, BankAccountEntity);
+        if (!parsed.success) {
+            throw new Error(parsed.error);
+        }
+        return parsed.unwrap();
     }
 }

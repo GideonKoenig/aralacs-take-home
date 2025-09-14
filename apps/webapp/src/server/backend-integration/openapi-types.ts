@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/webhook/process": {
+    "/process": {
         parameters: {
             query?: never;
             header?: never;
@@ -76,6 +76,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["PeopleController_friends"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AccountsController_listAll"];
         put?: never;
         post?: never;
         delete?: never;
@@ -184,11 +200,37 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        PersonDto: Record<string, never>;
-        AccountDto: Record<string, never>;
-        NetWorthDto: Record<string, never>;
-        BorrowableDto: Record<string, never>;
-        TransactionDto: Record<string, never>;
+        Person: {
+            id: number;
+            name: string;
+            email: string;
+            maxBorrowableCents?: number | null;
+            netWorthCents?: number | null;
+        };
+        BankAccount: {
+            iban: string;
+            balanceCents: number;
+            personId: number;
+        };
+        NetWorth: {
+            personId: number;
+            netWorthCents: number;
+        };
+        Borrowable: {
+            personId: number;
+            borrowableCents: number;
+        };
+        Transaction: {
+            /** Format: uuid */
+            id: string;
+            accountIban: string;
+            counterpartyIban: string;
+            amount: number;
+            /** @enum {string} */
+            direction: "debit" | "credit";
+            /** Format: date-time */
+            loadedAt: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -222,7 +264,14 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {unknown} */
+                    processId?: "1" | "2" | "3";
+                };
+            };
+        };
         responses: {
             202: {
                 headers: {
@@ -246,7 +295,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PersonDto"][];
+                    "application/json": components["schemas"]["Person"][];
                 };
             };
         };
@@ -255,7 +304,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -265,7 +316,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PersonDto"];
+                    "application/json": components["schemas"]["Person"];
                 };
             };
         };
@@ -274,6 +325,27 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Person"][];
+                };
+            };
+        };
+    };
+    AccountsController_listAll: {
+        parameters: {
+            query?: never;
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -284,7 +356,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PersonDto"][];
+                    "application/json": components["schemas"]["BankAccount"][];
                 };
             };
         };
@@ -293,7 +365,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -303,7 +377,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccountDto"][];
+                    "application/json": components["schemas"]["BankAccount"][];
                 };
             };
         };
@@ -312,7 +386,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                iban: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -322,7 +398,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AccountDto"];
+                    "application/json": components["schemas"]["BankAccount"];
                 };
             };
         };
@@ -331,7 +407,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -341,7 +419,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["NetWorthDto"];
+                    "application/json": components["schemas"]["NetWorth"];
                 };
             };
         };
@@ -350,7 +428,9 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -360,7 +440,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BorrowableDto"];
+                    "application/json": components["schemas"]["Borrowable"];
                 };
             };
         };
@@ -385,7 +465,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TransactionDto"][];
+                    "application/json": components["schemas"]["Transaction"][];
                 };
             };
         };
@@ -394,7 +474,10 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                /** @description Transaction ID (uuid) */
+                id: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -404,7 +487,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TransactionDto"];
+                    "application/json": components["schemas"]["Transaction"];
                 };
             };
         };

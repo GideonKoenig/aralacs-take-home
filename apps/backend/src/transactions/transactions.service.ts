@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { PostgresService } from "@/db/postgres.service.js";
 import { TransactionEntity } from "@scalara/db";
+import { TransactionDto } from "@/transactions/transactions.dto.js";
 
 @Injectable()
 export class TransactionsService {
@@ -8,7 +9,11 @@ export class TransactionsService {
         @Inject(PostgresService) private readonly postgres: PostgresService,
     ) {}
 
-    async list(params: { iban?: string; from?: Date; to?: Date }) {
+    async list(params: {
+        iban?: string;
+        from?: Date;
+        to?: Date;
+    }): Promise<TransactionDto[]> {
         const pg = this.postgres.get();
         const qb = pg.getRepository(TransactionEntity).createQueryBuilder("t");
         if (params.iban)
@@ -17,11 +22,30 @@ export class TransactionsService {
             qb.andWhere("t.loadedAt >= :from", { from: params.from });
         if (params.to) qb.andWhere("t.loadedAt <= :to", { to: params.to });
         qb.orderBy("t.loadedAt", "ASC");
-        return qb.getMany();
+        const rows = await qb.getMany();
+        return rows.map((r) => ({
+            id: r.id,
+            accountIban: r.accountIban,
+            counterpartyIban: r.counterpartyIban,
+            amount: r.amount,
+            direction: r.direction,
+            loadedAt: r.loadedAt,
+        }));
     }
 
-    async get(id: string) {
+    async get(id: string): Promise<TransactionDto | null> {
         const pg = this.postgres.get();
-        return pg.getRepository(TransactionEntity).findOne({ where: { id } });
+        const row = await pg
+            .getRepository(TransactionEntity)
+            .findOne({ where: { id } });
+        if (!row) return null;
+        return {
+            id: row.id,
+            accountIban: row.accountIban,
+            counterpartyIban: row.counterpartyIban,
+            amount: row.amount,
+            direction: row.direction,
+            loadedAt: row.loadedAt,
+        };
     }
 }

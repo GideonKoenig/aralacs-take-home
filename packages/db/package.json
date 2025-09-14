@@ -40,11 +40,8 @@
         }
     },
     "dependencies": {
-        "@anatine/zod-nestjs": "^2.0.12",
-        "@anatine/zod-openapi": "^2.2.8",
         "@t3-oss/env-core": "^0.13.8",
         "gremlin": "^3.7.4",
-        "openapi3-ts": "^4.5.0",
         "pg": "^8.16.3",
         "reflect-metadata": "^0.2.2",
         "typeorm": "^0.3.26",

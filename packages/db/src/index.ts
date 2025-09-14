@@ -1,3 +1,4 @@
+import "reflect-metadata";
 export * from "./env.js";
 export * from "./postgres.js";
 export * from "./postgres-entities/transaction.js";

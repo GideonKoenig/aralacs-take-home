@@ -1,12 +1,5 @@
-import {
-    type initializeGremlin,
-    type initializePostgres,
-    TransactionEntity,
-} from "@scalara/db";
-import { Failure, Success, tryCatch } from "@scalara/db/try-catch";
-
-type GremlinConnection = Awaited<ReturnType<typeof initializeGremlin>>;
-type PostgresConnection = Awaited<ReturnType<typeof initializePostgres>>;
+import { type GremlinConnection, type PostgresConnection } from "@scalara/db";
+import { Failure, Success, tryCatch } from "./try-catch.js";
 
 export async function generateDailyTransactions(
     gremlin: GremlinConnection,
@@ -30,7 +23,16 @@ export async function generateDailyTransactions(
         );
     }
 
-    const transactions: Omit<TransactionEntity, "id">[] = [];
+    // Note: this duplicates the TypeORM entity shape to avoid class identity issues
+    // Ideally, we would import and use the single TransactionEntity, but it's failing for some reason
+    type NewTransaction = {
+        accountIban: string;
+        counterpartyIban: string;
+        amount: number;
+        direction: "debit" | "credit";
+        loadedAt: Date;
+    };
+    const transactions: NewTransaction[] = [];
     const loadedAt = new Date();
     for (let i = 0; i < count; i++) {
         const a = choice(ibans);
@@ -48,20 +50,26 @@ export async function generateDailyTransactions(
         });
     }
 
-    const repo = postgres.getRepository(TransactionEntity);
-    await repo
-        .createQueryBuilder()
-        .insert()
-        .into(TransactionEntity)
-        .values(transactions)
-        .execute();
+    const CHUNK_SIZE = 10000;
+    await postgres.transaction(async (manager) => {
+        for (let start = 0; start < transactions.length; start += CHUNK_SIZE) {
+            const chunk = transactions.slice(start, start + CHUNK_SIZE);
+            await manager
+                .createQueryBuilder()
+                .insert()
+                .into("transactions")
+                .values(chunk)
+                .execute();
+        }
+    });
 
     return new Success({ inserted: transactions.length });
 }
 
 export async function clearAllTransactions(postgres: PostgresConnection) {
-    const repo = postgres.getRepository(TransactionEntity);
-    const result = await tryCatch(repo.clear());
+    const result = await tryCatch(
+        postgres.createQueryBuilder().delete().from("transactions").execute(),
+    );
     return result;
 }
 

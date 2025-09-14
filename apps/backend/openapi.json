@@ -15,10 +15,29 @@
         ]
       }
     },
-    "/webhook/process": {
+    "/process": {
       "post": {
         "operationId": "ProcessController_trigger",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "processId": {
+                    "enum": [
+                      "1",
+                      "2",
+                      "3"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "202": {
             "description": ""
@@ -41,7 +60,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PersonDto"
+                    "$ref": "#/components/schemas/Person"
                   }
                 }
               }
@@ -56,14 +75,23 @@
     "/people/{id}": {
       "get": {
         "operationId": "PeopleController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PersonDto"
+                  "$ref": "#/components/schemas/Person"
                 }
               }
             }
@@ -77,7 +105,16 @@
     "/people/{id}/friends": {
       "get": {
         "operationId": "PeopleController_friends",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -86,7 +123,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PersonDto"
+                    "$ref": "#/components/schemas/Person"
                   }
                 }
               }
@@ -98,9 +135,9 @@
         ]
       }
     },
-    "/accounts/person/{id}": {
+    "/accounts": {
       "get": {
-        "operationId": "AccountsController_listByPerson",
+        "operationId": "AccountsController_listAll",
         "parameters": [],
         "responses": {
           "200": {
@@ -110,7 +147,40 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AccountDto"
+                    "$ref": "#/components/schemas/BankAccount"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "accounts"
+        ]
+      }
+    },
+    "/accounts/person/{id}": {
+      "get": {
+        "operationId": "AccountsController_listByPerson",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BankAccount"
                   }
                 }
               }
@@ -125,14 +195,23 @@
     "/accounts/{iban}": {
       "get": {
         "operationId": "AccountsController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "iban",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AccountDto"
+                  "$ref": "#/components/schemas/BankAccount"
                 }
               }
             }
@@ -146,14 +225,23 @@
     "/metrics/people/{id}/net-worth": {
       "get": {
         "operationId": "MetricsController_netWorth",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NetWorthDto"
+                  "$ref": "#/components/schemas/NetWorth"
                 }
               }
             }
@@ -167,14 +255,23 @@
     "/metrics/people/{id}/borrowable": {
       "get": {
         "operationId": "MetricsController_borrowable",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BorrowableDto"
+                  "$ref": "#/components/schemas/Borrowable"
                 }
               }
             }
@@ -218,7 +315,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TransactionDto"
+                    "$ref": "#/components/schemas/Transaction"
                   }
                 }
               }
@@ -233,14 +330,24 @@
     "/transactions/{id}": {
       "get": {
         "operationId": "TransactionsController_get",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Transaction ID (uuid)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionDto"
+                  "$ref": "#/components/schemas/Transaction"
                 }
               }
             }
@@ -266,25 +373,118 @@
   ],
   "components": {
     "schemas": {
-      "PersonDto": {
+      "Person": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "maxBorrowableCents": {
+            "type": "number",
+            "nullable": true
+          },
+          "netWorthCents": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email"
+        ]
       },
-      "AccountDto": {
+      "BankAccount": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "iban": {
+            "type": "string"
+          },
+          "balanceCents": {
+            "type": "number"
+          },
+          "personId": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "iban",
+          "balanceCents",
+          "personId"
+        ]
       },
-      "NetWorthDto": {
+      "NetWorth": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "personId": {
+            "type": "number"
+          },
+          "netWorthCents": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "personId",
+          "netWorthCents"
+        ]
       },
-      "BorrowableDto": {
+      "Borrowable": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "personId": {
+            "type": "number"
+          },
+          "borrowableCents": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "personId",
+          "borrowableCents"
+        ]
       },
-      "TransactionDto": {
+      "Transaction": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountIban": {
+            "type": "string"
+          },
+          "counterpartyIban": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "debit",
+              "credit"
+            ]
+          },
+          "loadedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "accountIban",
+          "counterpartyIban",
+          "amount",
+          "direction",
+          "loadedAt"
+        ]
       }
     }
   }

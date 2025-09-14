@@ -27,7 +27,7 @@ const DEFAULTS: SeedArguments = {
     peopleMax: 50,
     accountsMin: 1,
     accountsMax: 5,
-    friendsPercent: 10,
+    friendsPercent: 50,
     reset: false,
 };
 
@@ -62,20 +62,21 @@ async function main() {
     }
 
     const peopleCount = randomInt(args.peopleMin, args.peopleMax);
-    const people: PersonType[] = [];
+    const people: (PersonType & { vertexId: number })[] = [];
     const accounts: BankAccountType[] = [];
 
     for (let i = 0; i < peopleCount; i++) {
         const id = generateNumericId(i);
         const name = generateName();
         const email = generateEmail(name);
-        await g
+        const created = await g
             .addV(PersonLabel)
-            .property(gprocess.t.id, id)
+            .property("id", id)
             .property("name", name)
             .property("email", email)
             .next();
-        people.push({ id, name, email });
+        const vertexId = (created.value as { id: number }).id;
+        people.push({ id, name, email, vertexId });
     }
 
     let totalAccounts = 0;
@@ -92,12 +93,12 @@ async function main() {
                 .next();
             const accountVertexId = (created.value as { id: number }).id;
             await g
-                .V(person.id)
+                .V()
+                .has(PersonLabel, "id", person.id)
                 .addE(BankAccountOwnerConnection)
                 .to(__.V(accountVertexId))
                 .next();
             accounts.push({
-                vertexId: accountVertexId,
                 iban,
                 balanceCents,
                 personId: person.id,
@@ -128,8 +129,18 @@ async function main() {
     );
     const selection = pairs.slice(0, targetPairs);
     for (const [aId, bId] of selection) {
-        await g.V(aId).addE(FriendshipConnection).to(__.V(bId)).next();
-        await g.V(bId).addE(FriendshipConnection).to(__.V(aId)).next();
+        await g
+            .V()
+            .has(PersonLabel, "id", aId)
+            .addE(FriendshipConnection)
+            .to(__.V().has(PersonLabel, "id", bId))
+            .next();
+        await g
+            .V()
+            .has(PersonLabel, "id", bId)
+            .addE(FriendshipConnection)
+            .to(__.V().has(PersonLabel, "id", aId))
+            .next();
         totalFriendships += 1;
     }
 

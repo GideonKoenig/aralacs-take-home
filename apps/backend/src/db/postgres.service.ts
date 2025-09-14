@@ -4,7 +4,7 @@ import { initializePostgres, type PostgresConnection } from "@scalara/db";
 
 @Injectable()
 export class PostgresService implements OnModuleInit, OnModuleDestroy {
-    private connection!: PostgresConnection;
+    private connection: PostgresConnection | undefined;
 
     async onModuleInit() {
         this.connection = await initializePostgres(env);
@@ -12,11 +12,15 @@ export class PostgresService implements OnModuleInit, OnModuleDestroy {
     }
 
     async onModuleDestroy() {
+        if (!this.connection) return;
         await this.connection.destroy();
         console.log("[PostgresService] Closed connection");
     }
 
     get() {
+        if (!this.connection) {
+            throw new Error("Postgres connection has not been initialized");
+        }
         return this.connection;
     }
 }

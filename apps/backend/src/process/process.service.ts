@@ -5,7 +5,6 @@ import {
     BankAccountOwnerConnection,
     FriendshipConnection,
     PersonLabel,
-    PersonType,
     TransactionEntity,
     type PostgresConnection,
 } from "@scalara/db";
@@ -14,7 +13,11 @@ import {
     logProcessExecution,
 } from "@scalara/shared/log-process-call";
 import { PostgresService } from "@/db/postgres.service.js";
-import { calculateLoan } from "@/lib/utils.js";
+import { calculateBorrowAmount, parseElementMaps } from "@/lib/utils.js";
+import gremlin from "gremlin";
+import z from "zod";
+const { process: gprocess } = gremlin;
+const { statics: __ } = gprocess;
 
 @Injectable()
 export class ProcessService {
@@ -23,11 +26,11 @@ export class ProcessService {
         @Inject(PostgresService) private readonly postgres: PostgresService,
     ) {}
 
-    async run(processId: 1 | 2 | 3) {
+    async run(processId: "1" | "2" | "3") {
         const pg = this.postgres.get();
-        if (processId >= 1) await this.aggregateTransactions(pg);
-        if (processId >= 2) await this.computeNetWorth();
-        if (processId >= 3) await this.computeBorrowable();
+        if (processId >= "1") await this.aggregateTransactions(pg);
+        if (processId >= "2") await this.computeNetWorth();
+        if (processId >= "3") await this.computeBorrowable();
     }
 
     private async aggregateTransactions(pg: PostgresConnection) {
@@ -74,7 +77,15 @@ export class ProcessService {
                 .has("iban", iban)
                 .property(
                     "balanceCents",
-                    g.inject(delta).math("_ + balanceCents"),
+                    __.project("old", "delta")
+                        .by(
+                            __.coalesce(
+                                __.values("balanceCents"),
+                                __.constant(0),
+                            ),
+                        )
+                        .by(__.constant(delta))
+                        .math("old + delta"),
                 )
                 .iterate();
         }
@@ -82,6 +93,8 @@ export class ProcessService {
         const processedCount = Number(stats?.count ?? 0);
         const startLoadedAt = stats?.min ? new Date(stats.min) : null;
         const endLoadedAt = stats?.max ? new Date(stats.max) : null;
+
+        console.log(`Processed ${processedCount} transactions`);
 
         if (processedCount > 0 && endLoadedAt) {
             const res = await logProcessExecution(
@@ -96,52 +109,86 @@ export class ProcessService {
 
     private async computeNetWorth() {
         const g = this.gremlin.traversal;
-        const persons = (await g
+        const results = (await g
             .V()
             .hasLabel(PersonLabel)
-            .toList()) as PersonType[];
-        for (const p of persons) {
-            const sum = await g
-                .V(p.id)
-                .out(BankAccountOwnerConnection)
-                .values("balanceCents")
-                .sum()
-                .next();
-            const value = Number(sum.value);
-            await g.V(p.id).property("netWorthCents", value).iterate();
+            .project("id", "netWorthCents")
+            .by("id")
+            .by(__.out(BankAccountOwnerConnection).values("balanceCents").sum())
+            .toList()) as Map<string, unknown>[];
+        const parsed = parseElementMaps(
+            results,
+            z.object({
+                id: z.number(),
+                netWorthCents: z.number(),
+            }),
+        );
+        if (!parsed.success) {
+            throw new Error(parsed.error);
+        }
+        const persons = parsed.unwrap();
+
+        for (const row of persons) {
+            const personId = row.id;
+            const netWorth = row.netWorthCents;
+            await g
+                .V()
+                .has(PersonLabel, "id", personId)
+                .property("netWorthCents", netWorth)
+                .iterate();
         }
     }
 
     private async computeBorrowable() {
         const g = this.gremlin.traversal;
-        const persons = (await g
+        const results = (await g
             .V()
             .hasLabel(PersonLabel)
-            .toList()) as PersonType[];
-        for (const p of persons) {
-            const myBalance = (
-                await g
-                    .V(p.id)
-                    .out(BankAccountOwnerConnection)
-                    .values("balanceCents")
-                    .sum()
-                    .next()
-            ).value as number;
+            .project("id", "myBalanceCents", "friendMaxCents")
+            .by("id")
+            .by(
+                __.coalesce(
+                    __.out(BankAccountOwnerConnection)
+                        .values("balanceCents")
+                        .sum(),
+                    __.constant(0),
+                ),
+            )
+            .by(
+                __.coalesce(
+                    __.out(FriendshipConnection)
+                        .map(
+                            __.coalesce(
+                                __.out(BankAccountOwnerConnection)
+                                    .values("balanceCents")
+                                    .sum(),
+                                __.constant(0),
+                            ),
+                        )
+                        .max(),
+                    __.constant(0),
+                ),
+            )
+            .toList()) as Map<string, unknown>[];
 
-            const friendMax = (
-                await g
-                    .V(p.id)
-                    .out(FriendshipConnection)
-                    .out(BankAccountOwnerConnection)
-                    .values("balanceCents")
-                    .max()
-                    .next()
-            ).value as number | undefined;
+        const parsed = parseElementMaps(
+            results,
+            z.object({
+                id: z.number(),
+                myBalanceCents: z.number(),
+                friendMaxCents: z.number(),
+            }),
+        );
+        if (!parsed.success) throw new Error(parsed.error);
+        const persons = parsed.unwrap();
 
-            const friendMaxNum = typeof friendMax === "number" ? friendMax : 0;
-            const borrowable = calculateLoan(myBalance, friendMaxNum);
+        for (const row of persons) {
+            const myBalance = row.myBalanceCents;
+            const friendMax = row.friendMaxCents;
+            const borrowable = calculateBorrowAmount(myBalance, friendMax);
             await g
-                .V(p.id)
+                .V()
+                .has(PersonLabel, "id", row.id)
                 .property("maxBorrowableCents", borrowable)
                 .iterate();
         }

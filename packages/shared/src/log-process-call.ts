@@ -2,7 +2,7 @@ import {
     ProcessExecutionLogEntity,
     type PostgresConnection,
 } from "@scalara/db";
-import { Failure, Success, tryCatch } from "@scalara/db/try-catch";
+import { Failure, Success, tryCatch } from "./try-catch.js";
 
 export async function logProcessExecution(
     postgres: PostgresConnection,
@@ -28,9 +28,11 @@ export async function logProcessExecution(
 
 export async function getLastProcessExecution(postgres: PostgresConnection) {
     const result = await tryCatch(
-        postgres.getRepository(ProcessExecutionLogEntity).findOne({
-            order: { executedAt: "DESC" },
-        }),
+        postgres
+            .getRepository(ProcessExecutionLogEntity)
+            .createQueryBuilder("pel")
+            .orderBy("pel.executedAt", "DESC")
+            .getOne(),
     );
     return result;
 }

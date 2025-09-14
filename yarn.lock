@@ -12,33 +12,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@anatine/zod-nestjs@npm:^2.0.12":
-  version: 2.0.12
-  resolution: "@anatine/zod-nestjs@npm:2.0.12"
-  dependencies:
-    ts-deepmerge: "npm:^6.1.0"
-  peerDependencies:
-    "@anatine/zod-openapi": ^2.0.1
-    "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
-    "@nestjs/swagger": ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
-    openapi3-ts: ^4.1.2
-    zod: ^3.20.0
-  checksum: 10c0/9e9b2125ba2a5f26d72ade42408994132feccd70b858bf62c2d5017c2e3c07f0ec32dcb33fd7d2db7f9aa63d7585da7afdf8d833ebe111b401a3b2bfc8d4b1a3
-  languageName: node
-  linkType: hard
-
-"@anatine/zod-openapi@npm:^2.2.8":
-  version: 2.2.8
-  resolution: "@anatine/zod-openapi@npm:2.2.8"
-  dependencies:
-    ts-deepmerge: "npm:^6.0.3"
-  peerDependencies:
-    openapi3-ts: ^4.1.2
-    zod: ^3.20.0
-  checksum: 10c0/30d38bcd24c366bf09ed60516eb4f8aaf91bbfed091b6dca61a06d63854dfd6df140bc35ce2ae65f3132d03254802d56f16ae41e16b0a972be40030e652d554f
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:19.2.15":
   version: 19.2.15
   resolution: "@angular-devkit/core@npm:19.2.15"
@@ -2269,8 +2242,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@scalara/db@workspace:packages/db"
   dependencies:
-    "@anatine/zod-nestjs": "npm:^2.0.12"
-    "@anatine/zod-openapi": "npm:^2.2.8"
     "@t3-oss/env-core": "npm:^0.13.8"
     "@types/gremlin": "npm:^3.6.7"
     "@types/node": "npm:^24.3.1"
@@ -2278,7 +2249,6 @@ __metadata:
     eslint-config-prettier: "npm:^10.0.1"
     globals: "npm:^16"
     gremlin: "npm:^3.7.4"
-    openapi3-ts: "npm:^4.5.0"
     pg: "npm:^8.16.3"
     prettier: "npm:^3"
     reflect-metadata: "npm:^0.2.2"
@@ -2898,6 +2868,13 @@ __metadata:
     "@types/methods": "npm:^1.1.4"
     "@types/superagent": "npm:^8.1.0"
   checksum: 10c0/a2080f870154b09db123864a484fb633bc9e2a0f7294a194388df4c7effe5af9de36d5a5ebf819f72b404fa47b5e813c47d5a3a51354251fd2fa8589bfb64f2c
+  languageName: node
+  linkType: hard
+
+"@types/validator@npm:^13.11.8":
+  version: 13.15.3
+  resolution: "@types/validator@npm:13.15.3"
+  checksum: 10c0/ee1f6266724595b715a01a4f9a2fd601b292906625dbb088ee60b43b3f47cbe371a09a793f2456ef7f6a35d53c9b208897a3d1dfdc4ad1a006ff3707d82f3e22
   languageName: node
   linkType: hard
 
@@ -3908,6 +3885,7 @@ __metadata:
     "@types/jest": "npm:^30.0.0"
     "@types/node": "npm:^22.10.7"
     "@types/supertest": "npm:^6.0.2"
+    class-validator: "npm:^0.14.2"
     eslint: "npm:^9.23.0"
     eslint-config-prettier: "npm:^10.0.1"
     globals: "npm:^16"
@@ -4225,6 +4203,17 @@ __metadata:
   version: 2.1.0
   resolution: "cjs-module-lexer@npm:2.1.0"
   checksum: 10c0/91cf28686dc3948e4a06dfa03a2fccb14b7a97471ffe7ae0124f62060ddf2de28e8e997f60007babe6e122b1b06a47c01a1b72cc015f185824d9cac3ccfa5533
+  languageName: node
+  linkType: hard
+
+"class-validator@npm:^0.14.2":
+  version: 0.14.2
+  resolution: "class-validator@npm:0.14.2"
+  dependencies:
+    "@types/validator": "npm:^13.11.8"
+    libphonenumber-js: "npm:^1.11.1"
+    validator: "npm:^13.9.0"
+  checksum: 10c0/5bb67389d38fa23d342dffdd8e2dcee8235e1906e59799df5b2050278a6d89292fcaa88167f0215e3ddd684f47dcd51b004efa7be32d8aded91ee06cb317b3b8
   languageName: node
   linkType: hard
 
@@ -7408,6 +7397,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"libphonenumber-js@npm:^1.11.1":
+  version: 1.12.17
+  resolution: "libphonenumber-js@npm:1.12.17"
+  checksum: 10c0/e0e1d07757a89c6ebf645155f9b88ecb25cad4b7155b316f950a87cde32c3eb516b254b0bef4011c3dd278698572f05e131df5c92820132cd6afbdec2818ffeb
+  languageName: node
+  linkType: hard
+
 "light-my-request@npm:6.6.0, light-my-request@npm:^6.0.0":
   version: 6.6.0
   resolution: "light-my-request@npm:6.6.0"
@@ -8269,15 +8265,6 @@ __metadata:
   bin:
     openapi-typescript: bin/cli.js
   checksum: 10c0/52db65d211f872e0a34018cca409f388d70d55fa7cd6e07eacbb8ffc873ed78ffa29f95758766e2bd51ef87145aea8b66350638355cac5887f407aba9080d408
-  languageName: node
-  linkType: hard
-
-"openapi3-ts@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "openapi3-ts@npm:4.5.0"
-  dependencies:
-    yaml: "npm:^2.8.0"
-  checksum: 10c0/97de2d24e9ceffb89e1388e137e4a6e17ee57a02dce0c938a5e98b1338ac72b31e8b2ce8dd28945ad43fae8bee2a145892cb548ba5ae60b0930f1b6b79b0747d
   languageName: node
   linkType: hard
 
@@ -10213,13 +10200,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-deepmerge@npm:^6.0.3, ts-deepmerge@npm:^6.1.0":
-  version: 6.2.1
-  resolution: "ts-deepmerge@npm:6.2.1"
-  checksum: 10c0/b73bc0a0530b26b3969f994483abbb33a8514a9b345e7095cf2add5242cd1fe388c1007c4989e2d8b193fe608f9d7a443025a635fd4331bd0ceb76c73f748adf
-  languageName: node
-  linkType: hard
-
 "ts-jest@npm:^29.2.5":
   version: 29.4.1
   resolution: "ts-jest@npm:29.4.1"
@@ -10812,6 +10792,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"validator@npm:^13.9.0":
+  version: 13.15.15
+  resolution: "validator@npm:13.15.15"
+  checksum: 10c0/f5349d1fbb9cc36f9f6c5dab1880764ddad1d0d2b084e2a71e5964f7de1635d20e406611559df9a3db24828ce775cbee5e3b6dd52f0d555a61939ed7ea5990bd
+  languageName: node
+  linkType: hard
+
 "walker@npm:^1.0.8":
   version: 1.0.8
   resolution: "walker@npm:1.0.8"
@@ -11159,7 +11146,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.4.1, yaml@npm:^2.4.2, yaml@npm:^2.8.0":
+"yaml@npm:^2.4.1, yaml@npm:^2.4.2":
   version: 2.8.1
   resolution: "yaml@npm:2.8.1"
   bin:
