@@ -4,7 +4,11 @@
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "target": "ES2022",
-        "noEmit": true,
+        "noEmit": false,
+        "verbatimModuleSyntax": false,
+        "rootDir": "src",
+        "outDir": "dist",
+        "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "baseUrl": ".",
@@ -12,6 +16,6 @@
             "@/*": ["src/*"]
         }
     },
-    "include": ["src/**/*.ts", "scripts/**/*.ts"],
+    "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]
 }

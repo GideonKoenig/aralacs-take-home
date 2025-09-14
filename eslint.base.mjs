@@ -23,10 +23,12 @@ const baseConfig = [
                     allowNullish: true,
                 },
             ],
+            "@typescript-eslint/consistent-type-definitions": ["error", "type"],
             "@typescript-eslint/consistent-type-imports": [
                 "warn",
                 { prefer: "type-imports", fixStyle: "inline-type-imports" },
             ],
+            "@typescript-eslint/no-non-null-assertion": "off",
             "@typescript-eslint/no-unused-vars": [
                 "warn",
                 { argsIgnorePattern: "^_" },

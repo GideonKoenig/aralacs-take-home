@@ -2,23 +2,50 @@
     "name": "@scalara/db",
     "type": "module",
     "packageManager": "yarn@4.9.4",
-    "main": "src/index.ts",
+    "files": [
+        "dist"
+    ],
+    "types": "./dist/index.d.ts",
+    "main": "./dist/index.js",
     "scripts": {
+        "build": "tsc -p .",
+        "dev": "tsc -w -p .",
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
         "lint": "eslint \"**/*.{ts,tsx,js,jsx}\" --fix",
         "start": "tsx ./scripts/start-database.ts",
+        "seed": "tsx ./scripts/seed-gremlin.ts",
         "typeorm": "typeorm-ts-node-esm",
         "generate": "yarn typeorm migration:generate -d ./src/postgres.ts ./src/postgres-migrations/Migration",
         "push": "yarn typeorm migration:run -d ./src/postgres.ts"
     },
+    "sideEffects": false,
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "import": "./dist/*.js"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "*": [
+                "dist/*"
+            ],
+            "": [
+                "dist/index.d.ts"
+            ]
+        }
+    },
     "dependencies": {
         "@t3-oss/env-core": "^0.13.8",
-        "global": "^4.4.0",
         "gremlin": "^3.7.4",
         "pg": "^8.16.3",
         "reflect-metadata": "^0.2.2",
         "typeorm": "^0.3.26",
-        "zod": "^4.1.5"
+        "zod": "^4.1.8"
     },
     "devDependencies": {
         "@types/gremlin": "^3.6.7",

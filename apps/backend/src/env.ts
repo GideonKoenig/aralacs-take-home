@@ -1,10 +1,11 @@
 import "dotenv/config";
-import { createEnv } from "@t3-oss/env-core";
-import { z } from "zod";
+import { envDb } from "@scalara/db";
 import { envShared } from "@scalara/shared";
+import { z } from "zod";
+import { createEnv } from "@t3-oss/env-core";
 
 export const env = createEnv({
-    extends: [envShared],
+    extends: [envDb, envShared],
     server: {
         SITE_URL: z.url(),
         PORT: z.coerce.number(),
@@ -13,3 +14,5 @@ export const env = createEnv({
     runtimeEnv: process.env,
     emptyStringAsUndefined: true,
 });
+
+export type EnvBackend = typeof env;

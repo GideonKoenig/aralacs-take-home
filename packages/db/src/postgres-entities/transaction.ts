@@ -13,16 +13,16 @@ export class TransactionEntity {
 
     @Index()
     @Column({ type: "varchar", length: 34 })
-    fromIban!: string;
+    accountIban!: string;
 
     @Column({ type: "varchar", length: 34 })
-    toIban!: string;
+    counterpartyIban!: string;
 
     @Column({ type: "int" })
     amount!: number;
 
-    @Column({ type: "boolean" })
-    isPositive!: boolean;
+    @Column({ type: "enum", enum: ["debit", "credit"] })
+    direction!: "debit" | "credit";
 
     @CreateDateColumn({ type: "timestamptz" })
     loadedAt!: Date;

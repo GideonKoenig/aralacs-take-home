@@ -18,6 +18,16 @@ const config = [
             },
         },
     },
+    {
+        files: ["scripts/**/*.ts"],
+        languageOptions: {
+            parserOptions: {
+                projectService: false,
+                project: ["./tsconfig.eslint.json"],
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
 ];
 
 export default config;

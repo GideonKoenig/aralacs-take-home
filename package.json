@@ -7,11 +7,12 @@
         "packages/*"
     ],
     "scripts": {
-        "predev": "yarn workspace @scalara/shared run build",
-        "dev": "concurrently -k -n shared,backend,webapp -c magenta,yellow,green \"yarn workspace @scalara/shared run dev\" \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\"",
+        "predev": "yarn workspace @scalara/shared run build && yarn workspace @scalara/db run build",
+        "dev": "concurrently -k -n shared,db,backend,webapp -c magenta,cyan,yellow,green \"yarn workspace @scalara/shared run dev\" \"yarn workspace @scalara/db run dev\" \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\"",
         "lint": "yarn workspaces foreach -pv run lint",
         "format": "yarn workspaces foreach -pv run format",
         "db:start": "yarn workspace @scalara/db run start",
+        "db:seed": "yarn workspace @scalara/db run seed",
         "db:generate": "yarn workspace @scalara/db run generate",
         "db:push": "yarn workspace @scalara/db run push"
     },

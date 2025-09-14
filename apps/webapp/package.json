@@ -17,6 +17,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "@scalara/db": "workspace:*",
         "@scalara/shared": "workspace:*",
         "@t3-oss/env-nextjs": "^0.12.0",
         "@tanstack/react-query": "^5.69.0",
@@ -29,7 +30,7 @@
         "react-dom": "^19.0.0",
         "server-only": "^0.0.1",
         "superjson": "^2.2.1",
-        "zod": "^3.24.2"
+        "zod": "^4.1.8"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3.3.1",
