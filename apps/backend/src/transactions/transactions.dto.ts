@@ -1,8 +1,7 @@
 import { ApiProperty, ApiSchema } from "@nestjs/swagger";
-import { TransactionEntity } from "@scalara/db";
 
 @ApiSchema({ name: "Transaction" })
-export class TransactionDto implements TransactionEntity {
+export class TransactionDto {
     @ApiProperty({ type: String, format: "uuid" })
     id!: string;
 
