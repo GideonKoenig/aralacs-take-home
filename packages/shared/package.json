@@ -37,7 +37,7 @@
     "dependencies": {
         "@scalara/db": "workspace:*",
         "@t3-oss/env-core": "^0.13.8",
-        "zod": "^4.1.8"
+        "zod": "^3.24.0"
     },
     "devDependencies": {
         "@types/node": "^24.3.1",

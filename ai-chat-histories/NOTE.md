@@ -1,0 +1,1 @@
+it shoudl be noted that not all chats where exported, as I forgot on multiple occasion to export eh chat, and at that point, the conversation was to chaotic to properly reconstrsuct it.

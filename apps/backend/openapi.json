@@ -10,7 +10,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BodyDto"
+                "$ref": "#/components/schemas/TriggerProcessRequest"
               }
             }
           }
@@ -374,7 +374,7 @@
   ],
   "components": {
     "schemas": {
-      "BodyDto": {
+      "TriggerProcessRequest": {
         "type": "object",
         "properties": {
           "processId": {

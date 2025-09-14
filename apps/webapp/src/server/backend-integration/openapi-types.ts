@@ -184,7 +184,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        BodyDto: {
+        TriggerProcessRequest: {
             /** @enum {string} */
             processId: "1" | "2" | "3";
         };
@@ -237,7 +237,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["BodyDto"];
+                "application/json": components["schemas"]["TriggerProcessRequest"];
             };
         };
         responses: {

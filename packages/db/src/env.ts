@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const envDb = createEnv({
     server: {
-        POSTGRES_DATABASE_URL: z.url(),
-        GREMLIN_DATABASE_URL: z.url(),
+        POSTGRES_DATABASE_URL: z.string().url(),
+        GREMLIN_DATABASE_URL: z.string().url(),
         NODE_ENV: z.enum(["development", "production"]),
     },
     runtimeEnv: {
