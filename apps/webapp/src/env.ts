@@ -7,7 +7,7 @@ export const env = createEnv({
     extends: [envShared, envDb],
     server: {
         NODE_ENV: z.enum(["development", "test", "production"]),
-        BACKEND_URL: z.url(),
+        BACKEND_URL: z.string().url(),
     },
     client: {},
     runtimeEnv: {
