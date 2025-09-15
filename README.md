@@ -51,7 +51,12 @@ yarn db:push
 yarn db:seed
 ```
 
-6) Run the apps
+6) Prepare the dev
+```
+yarn predev
+```
+
+7) Run the apps
 ```
 yarn dev
 ```
