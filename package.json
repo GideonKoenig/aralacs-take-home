@@ -7,7 +7,7 @@
         "packages/*"
     ],
     "scripts": {
-        "predev": "yarn workspace @scalara/shared run build && yarn workspace @scalara/db run build",
+        "predev": "yarn workspace @scalara/db run build && yarn workspace @scalara/shared run build",
         "dev": "concurrently -k -n shared,db,backend,webapp -c magenta,cyan,yellow,green \"yarn workspace @scalara/shared run dev\" \"yarn workspace @scalara/db run dev\" \"yarn workspace backend run start:dev\" \"yarn workspace webapp run dev\"",
         "lint": "yarn workspaces foreach -pv run lint",
         "format": "yarn workspaces foreach -pv run format",
