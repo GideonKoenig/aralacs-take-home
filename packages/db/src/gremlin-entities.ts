@@ -10,6 +10,7 @@ export const PersonEntity = z.object({
     netWorthCents: z.number().int().nullable().optional(),
 });
 export type PersonType = z.infer<typeof PersonEntity>;
+
 @ApiSchema({ name: "Person" })
 export class PersonDto {
     @ApiProperty({ type: Number })
@@ -49,6 +50,7 @@ export const BankAccountEntity = z.object({
     personId: z.number(),
 });
 export type BankAccountType = z.infer<typeof BankAccountEntity>;
+
 @ApiSchema({ name: "BankAccount" })
 export class BankAccountDto {
     @ApiProperty({ type: String })
