@@ -23,10 +23,10 @@ Relevant notes and build logs can be found in `META.md` and the `ai-chat-histori
 - `packages/shared` Shared utilities (daily transaction generator, process logging)
 
 ## Prerequisites
-- Docker Desktop
+- Docker (+Docker Desktop for Windows)
 - Node.js 20+
 - Yarn 4 (enabled via `corepack enable`)
-- Windows: WSL installed (the DB startup script uses WSL to run a bash script)
+- For Windows: WSL installed (the DB startup script uses WSL to run a bash script)
 
 ## Getting started
 1) Install dependencies
