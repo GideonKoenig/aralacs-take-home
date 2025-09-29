@@ -51,7 +51,7 @@ yarn db:push
 yarn db:seed
 ```
 
-6) Prepare the dev
+6) Prepare workspace for dev
 ```
 yarn predev
 ```
