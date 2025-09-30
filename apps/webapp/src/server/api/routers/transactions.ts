@@ -4,9 +4,14 @@ import {
     generateDailyTransactions,
     clearAllTransactions,
 } from "@scalara/shared/generate-transactions";
+import { TransactionEntity } from "@scalara/db";
 import z from "zod";
 
 export const transactionsRouter = createTRPCRouter({
+    count: publicProcedure.query(async () => {
+        return pg.getRepository(TransactionEntity).count();
+    }),
+
     generate: publicProcedure
         .input(z.object({ count: z.number().int().positive() }))
         .mutation(async ({ input }) => {

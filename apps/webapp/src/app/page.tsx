@@ -4,12 +4,17 @@ import { useState } from "react";
 
 export default function Home() {
     const utils = api.useUtils();
+    const transactionCountQuery = api.transactions.count.useQuery();
     const [count, setCount] = useState<number>(10_000);
     const generate = api.transactions.generate.useMutation({
-        onSuccess: () => utils.invalidate(),
+        onSuccess: () => {
+            void utils.transactions.count.invalidate();
+        },
     });
     const wipe = api.transactions.clear.useMutation({
-        onSuccess: () => utils.invalidate(),
+        onSuccess: () => {
+            void utils.transactions.count.invalidate();
+        },
     });
     const preProcess = api.process.preProcess.useMutation({
         onSuccess: () => utils.invalidate(),
@@ -45,6 +50,9 @@ export default function Home() {
                 >
                     Wipe transactions
                 </button>
+                <span>
+                    {`Transactions: ${transactionCountQuery.data?.toLocaleString() ?? (transactionCountQuery.isLoading ? "..." : "0")}`}
+                </span>
             </div>
             <div className="flex items-center gap-2">
                 <button
