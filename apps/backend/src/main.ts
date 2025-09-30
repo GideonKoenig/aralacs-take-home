@@ -37,8 +37,8 @@ async function bootstrap() {
         .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    const outputPath = join(process.cwd(), "openapi.json");
     if (env.NODE_ENV === "development") {
+        const outputPath = join(process.cwd(), "openapi.json");
         writeFileSync(outputPath, JSON.stringify(document, null, 2));
     }
 
